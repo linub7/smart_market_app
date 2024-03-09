@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { BACKEND_URL } from '@env';
 
 const client = axios.create({
-  baseURL: `${BACKEND_URL}/api/v1`,
+  baseURL: `http://10.0.2.2:5000/api/v1`,
 });
 
 export default client;

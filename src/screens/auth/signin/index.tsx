@@ -1,6 +1,8 @@
 import { FC, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { FormikHelpers } from 'formik';
+import Toast from 'react-native-toast-message';
 
 import { SIGNIN_IMAGE } from 'src/constants';
 import AuthScreensUI from '@ui/auth/screens';
@@ -12,6 +14,8 @@ import SubmitButton from '@components/shared/buttons/submit';
 import FormDivider from '@ui/divider/form';
 import AppLink from '@ui/links/app';
 import { AuthStackParamList } from 'src/@types/navigation';
+import { ISigninUser } from 'src/@types/auth';
+import { signinHandler } from '@api/auth';
 
 interface Props {}
 
@@ -26,10 +30,23 @@ const SigninScreen: FC<Props> = (props) => {
 
   const handleTogglePrivateIcon = () => setPrivateIcon(!privateIcon);
 
+  const handleSubmit = async (
+    values: ISigninUser,
+    actions: FormikHelpers<ISigninUser>
+  ) => {
+    actions.setSubmitting(true);
+    const { err, data } = await signinHandler(values);
+    if (err) {
+      actions.setSubmitting(false);
+      return Toast.show({ type: 'error', text1: err });
+    }
+    console.log({ data });
+  };
+
   return (
     <FormComponent
       initialValues={initialValues}
-      onSubmit={() => {}}
+      onSubmit={handleSubmit}
       validationSchema={signinValidationSchema}
     >
       <ScrollView style={styles.formContainer}>

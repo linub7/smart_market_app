@@ -7,7 +7,7 @@ interface Props {
   color?: string;
 }
 
-const CustomLoader: FC<Props> = ({ color = colors.PRIMARY }) => {
+const CustomLoader: FC<Props> = ({ color = colors.WHITE }) => {
   return <ActivityIndicator color={color} size={24} />;
 };
 

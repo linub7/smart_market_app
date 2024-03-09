@@ -1,6 +1,8 @@
 import { FC, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { FormikHelpers } from 'formik';
+import Toast from 'react-native-toast-message';
 
 import AuthInputFields from '@components/auth/input-fields';
 import SubmitButton from '@components/shared/buttons/submit';
@@ -12,6 +14,8 @@ import { WELCOME_IMAGE } from 'src/constants';
 import FormDivider from '@ui/divider/form';
 import AppLink from '@ui/links/app';
 import { AuthStackParamList } from 'src/@types/navigation';
+import { ISignupUser } from 'src/@types/auth';
+import { signupHandler } from '@api/auth';
 
 interface Props {}
 
@@ -26,10 +30,29 @@ const SignupScreen: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
   const handleTogglePrivateIcon = () => setPrivateIcon(!privateIcon);
+
+  const handleSubmit = async (
+    values: ISignupUser,
+    actions: FormikHelpers<ISignupUser>
+  ) => {
+    actions.setSubmitting(true);
+    const { err, data } = await signupHandler(values);
+    if (err) {
+      actions.setSubmitting(false);
+      return Toast.show({ type: 'error', text1: err });
+    }
+    actions.setSubmitting(false);
+    console.log({ data });
+    Toast.show({
+      type: 'success',
+      text1: 'You registered successfully.',
+      text2: 'Please verified your account',
+    });
+  };
   return (
     <FormComponent
       initialValues={initialValues}
-      onSubmit={() => {}}
+      onSubmit={handleSubmit}
       validationSchema={signupValidationSchema}
     >
       <ScrollView style={styles.formContainer}>

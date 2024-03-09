@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { FormikHelpers } from 'formik';
+import Toast from 'react-native-toast-message';
 
 import AuthInputFields from '@components/auth/input-fields';
 import SubmitButton from '@components/shared/buttons/submit';
@@ -11,6 +13,8 @@ import { FORGOT_PASSWORD_IMAGE } from 'src/constants';
 import FormDivider from '@ui/divider/form';
 import AppLink from '@ui/links/app';
 import { AuthStackParamList } from 'src/@types/navigation';
+import { IForgotPassword } from 'src/@types/auth';
+import { forgetPasswordHandler } from '@api/auth';
 
 interface Props {}
 
@@ -20,10 +24,24 @@ const initialValues = {
 
 const ForgetPasswordScreen: FC<Props> = (props) => {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+
+  const handleSubmit = async (
+    values: IForgotPassword,
+    actions: FormikHelpers<IForgotPassword>
+  ) => {
+    actions.setSubmitting(true);
+    const { err, data } = await forgetPasswordHandler(values);
+    if (err) {
+      actions.setSubmitting(false);
+      return Toast.show({ type: 'error', text1: err });
+    }
+    actions.setSubmitting(false);
+    Toast.show({ type: 'success', text1: 'Please check your mail box.' });
+  };
   return (
     <FormComponent
       initialValues={initialValues}
-      onSubmit={() => {}}
+      onSubmit={handleSubmit}
       validationSchema={forgotPasswordValidationSchema}
     >
       <ScrollView style={styles.formContainer}>
