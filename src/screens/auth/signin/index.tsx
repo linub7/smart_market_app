@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { FormikHelpers } from 'formik';
+import { useDispatch } from 'react-redux';
 import Toast from 'react-native-toast-message';
 
 import { SIGNIN_IMAGE } from 'src/constants';
@@ -16,6 +17,8 @@ import AppLink from '@ui/links/app';
 import { AuthStackParamList } from 'src/@types/navigation';
 import { ISigninUser } from 'src/@types/auth';
 import { signinHandler } from '@api/auth';
+import { updateLoggedInStateAction, updateProfileAction } from '@store/auth';
+import { Keys, saveToAsyncStorage } from '@utils/asyncStorage';
 
 interface Props {}
 
@@ -26,6 +29,8 @@ const initialValues = {
 
 const SigninScreen: FC<Props> = (props) => {
   const [privateIcon, setPrivateIcon] = useState(true);
+
+  const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
   const handleTogglePrivateIcon = () => setPrivateIcon(!privateIcon);
@@ -40,7 +45,20 @@ const SigninScreen: FC<Props> = (props) => {
       actions.setSubmitting(false);
       return Toast.show({ type: 'error', text1: err });
     }
-    console.log({ data });
+    if (data?.status === 'success') {
+      await saveToAsyncStorage(
+        Keys.AUTH_ACCESS_TOKEN,
+        data?.data?.tokens?.accessToken
+      );
+      await saveToAsyncStorage(
+        Keys.AUTH_REFRESH_TOKEN,
+        data?.data?.tokens?.refreshToken
+      );
+      dispatch(updateProfileAction({ profile: data?.data?.profile }));
+      dispatch(updateLoggedInStateAction({ loggedInState: true }));
+      Toast.show({ type: 'success', text1: 'Welcome back' });
+      actions.setSubmitting(false);
+    }
   };
 
   return (

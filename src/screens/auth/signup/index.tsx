@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { FormikHelpers } from 'formik';
+import { useDispatch } from 'react-redux';
 import Toast from 'react-native-toast-message';
 
 import AuthInputFields from '@components/auth/input-fields';
@@ -15,7 +16,9 @@ import FormDivider from '@ui/divider/form';
 import AppLink from '@ui/links/app';
 import { AuthStackParamList } from 'src/@types/navigation';
 import { ISignupUser } from 'src/@types/auth';
-import { signupHandler } from '@api/auth';
+import { signinHandler, signupHandler } from '@api/auth';
+import { updateLoggedInStateAction, updateProfileAction } from '@store/auth';
+import { Keys, saveToAsyncStorage } from '@utils/asyncStorage';
 
 interface Props {}
 
@@ -27,6 +30,8 @@ const initialValues = {
 
 const SignupScreen: FC<Props> = (props) => {
   const [privateIcon, setPrivateIcon] = useState(true);
+
+  const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
   const handleTogglePrivateIcon = () => setPrivateIcon(!privateIcon);
@@ -41,13 +46,33 @@ const SignupScreen: FC<Props> = (props) => {
       actions.setSubmitting(false);
       return Toast.show({ type: 'error', text1: err });
     }
-    actions.setSubmitting(false);
-    console.log({ data });
+
     Toast.show({
       type: 'success',
       text1: 'You registered successfully.',
       text2: 'Please verified your account',
     });
+    const signInValues = { email: values.email, password: values.password };
+    const { err: signinError, data: signinData } = await signinHandler(
+      signInValues
+    );
+    if (signinError) {
+      actions.setSubmitting(false);
+      return Toast.show({ type: 'error', text1: err });
+    }
+    if (signinData?.status === 'success') {
+      await saveToAsyncStorage(
+        Keys.AUTH_ACCESS_TOKEN,
+        signinData?.data?.tokens?.accessToken
+      );
+      await saveToAsyncStorage(
+        Keys.AUTH_REFRESH_TOKEN,
+        signinData?.data?.tokens?.refreshToken
+      );
+      dispatch(updateProfileAction({ profile: signinData?.data?.profile }));
+      dispatch(updateLoggedInStateAction({ loggedInState: true }));
+      actions.setSubmitting(false);
+    }
   };
   return (
     <FormComponent

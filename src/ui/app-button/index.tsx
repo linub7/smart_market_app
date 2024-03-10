@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { StyleSheet, Pressable, Text } from 'react-native';
 
-import CustomLoader from '@ui/loader';
+import ButtonLoader from '@ui/loaders/button-loader';
 import { colors } from '@utils/colors';
 
 interface Props {
@@ -29,7 +29,7 @@ const AppButton: FC<Props> = ({
       onPress={onPress}
     >
       {loading ? (
-        <CustomLoader />
+        <ButtonLoader />
       ) : (
         <Text style={styles.title}>{btnTitle}</Text>
       )}

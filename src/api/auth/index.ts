@@ -37,3 +37,27 @@ export const forgetPasswordHandler = async (values: IForgotPassword) => {
     return { err: errorMessage };
   }
 };
+
+export const getMeHandler = async (token: string) => {
+  try {
+    const { data } = await client.get(`/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return { data };
+  } catch (error: any) {
+    const errorMessage = catchAsyncError(error);
+    return { err: errorMessage };
+  }
+};
+
+export const grantAccessTokenHandler = async (refreshToken: string) => {
+  try {
+    const { data } = await client.post(`/auth/refresh-token`, { refreshToken });
+    return { data };
+  } catch (error: any) {
+    const errorMessage = catchAsyncError(error);
+    return { err: errorMessage };
+  }
+};

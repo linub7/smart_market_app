@@ -3,3 +3,7 @@ export type AuthStackParamList = {
   signup: undefined;
   'forget-password': undefined;
 };
+
+export type AuthenticatedNavigatorStackParamList = {
+  home: undefined;
+};

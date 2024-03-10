@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator();
 const AuthNavigator: FC<Props> = (props) => {
   return (
     <Stack.Navigator
-      initialRouteName="signup"
+      initialRouteName="signin"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="signin" component={SigninScreen} />
