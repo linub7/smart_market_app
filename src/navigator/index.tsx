@@ -6,7 +6,6 @@ import Toast from 'react-native-toast-message';
 
 import { colors } from '@utils/colors';
 import AuthNavigator from './auth';
-import AuthenticatedNavigator from './authenticated';
 import {
   getAuthState,
   updateLoadingStateAction,
@@ -20,6 +19,7 @@ import {
 } from '@utils/asyncStorage';
 import { getMeHandler, grantAccessTokenHandler } from '@api/auth';
 import ButtonLoader from '@ui/loaders/button-loader';
+import TabNavigator from './tab';
 
 interface Props {}
 
@@ -84,7 +84,7 @@ const AppNavigator: FC<Props> = (props) => {
           <ButtonLoader color={colors.PRIMARY} />
         </View>
       ) : loggedIn ? (
-        <AuthenticatedNavigator />
+        <TabNavigator />
       ) : (
         <AuthNavigator />
       )}
