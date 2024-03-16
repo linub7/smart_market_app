@@ -13,13 +13,10 @@ interface Props<T> {
 
 const OptionModal = <T extends unknown>(props: Props<T>) => {
   const { visible, options, renderItem, onPress, onRequestClose } = props;
+  const handleCloseModal = () => onRequestClose(!visible);
   return (
-    <Modal
-      transparent
-      visible={visible}
-      onRequestClose={() => onRequestClose(!visible)}
-    >
-      <View style={styles.container}>
+    <Modal transparent visible={visible} onRequestClose={handleCloseModal}>
+      <Pressable onPress={handleCloseModal} style={styles.container}>
         <View style={styles.innerContainer}>
           <ScrollView showsVerticalScrollIndicator={false}>
             {options.map((item, index) => (
@@ -29,7 +26,7 @@ const OptionModal = <T extends unknown>(props: Props<T>) => {
             ))}
           </ScrollView>
         </View>
-      </View>
+      </Pressable>
     </Modal>
   );
 };

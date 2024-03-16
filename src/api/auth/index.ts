@@ -52,7 +52,49 @@ export const getMeHandler = async (token: string) => {
   }
 };
 
+export const testHandler = async (token: string) => {
+  try {
+    const { data } = await client.get(`/auth/test`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return { data };
+  } catch (error: any) {
+    const errorMessage = catchAsyncError(error);
+    return { err: errorMessage };
+  }
+};
+
+export const signoutHandler = async (token: string, refreshToken: string) => {
+  try {
+    const { data } = await client.post(
+      `/auth/signout`,
+      { refreshToken },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return { data };
+  } catch (error: any) {
+    const errorMessage = catchAsyncError(error);
+    return { err: errorMessage };
+  }
+};
+
 export const grantAccessTokenHandler = async (refreshToken: string) => {
+  try {
+    const { data } = await client.post(`/auth/refresh-token`, { refreshToken });
+    return { data };
+  } catch (error: any) {
+    const errorMessage = catchAsyncError(error);
+    return { err: errorMessage };
+  }
+};
+
+export const refreshTokenHandler = async (refreshToken: string) => {
   try {
     const { data } = await client.post(`/auth/refresh-token`, { refreshToken });
     return { data };

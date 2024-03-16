@@ -72,7 +72,7 @@ const AppNavigator: FC<Props> = (props) => {
       dispatch(updateLoggedInStateAction({ loggedInState: true }));
       dispatch(updateLoadingStateAction({ loadingState: false }));
     } catch (error) {
-      console.log(error);
+      console.log({ error });
       dispatch(updateLoadingStateAction({ loadingState: false }));
     }
   };
