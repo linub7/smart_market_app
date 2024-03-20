@@ -20,7 +20,13 @@ const OptionModal = <T extends unknown>(props: Props<T>) => {
         <View style={styles.innerContainer}>
           <ScrollView showsVerticalScrollIndicator={false}>
             {options.map((item, index) => (
-              <Pressable onPress={() => onPress(item)} key={index}>
+              <Pressable
+                onPress={() => {
+                  onPress(item);
+                  handleCloseModal();
+                }}
+                key={index}
+              >
                 {renderItem(item)}
               </Pressable>
             ))}

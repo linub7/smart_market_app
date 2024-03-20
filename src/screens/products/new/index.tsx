@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
 
 import AuthInput from '@ui/auth/input';
 import { colors } from '@utils/colors';
@@ -18,24 +17,29 @@ import OptionModal from '@components/modals/option-modal';
 import { categories } from '@utils/categories';
 import CategoryOption from '@ui/options/category';
 import AppButton from '@ui/app-button';
-import { getAuthState } from '@store/auth';
 
 interface Props {}
 
-const NewProductScreen: FC<Props> = (props) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
-  const [date, setDate] = useState<Date>(new Date());
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const { profile } = useSelector(getAuthState);
-  // console.log({ profile });
+const defaultNewProductInfo = {
+  name: '',
+  description: '',
+  price: '',
+  category: '',
+  purchasingDate: new Date(),
+};
 
-  const handleChangeDate = (date: Date) => setDate(date);
+const NewProductScreen: FC<Props> = (props) => {
+  const [newProductInfo, setNewProductInfo] = useState({
+    ...defaultNewProductInfo,
+  });
+  const { category, description, name, price, purchasingDate } = newProductInfo;
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+
+  const handleChange = (name: string) => (text: string) =>
+    setNewProductInfo({ ...newProductInfo, [name]: text });
 
   const handleCreateNewProduct = async () => {
-    console.log({ name, description, price, category, date });
+    console.log({ name, description, price, category, purchasingDate });
   };
 
   return (
@@ -54,36 +58,35 @@ const NewProductScreen: FC<Props> = (props) => {
             placeholder="Product Name"
             style={styles.marginBottom}
             value={name}
-            onChangeText={(txt) => setName(txt)}
+            onChangeText={handleChange('name')}
           />
           <AuthInput
             placeholder="Price"
             style={styles.marginBottom}
             keyboardType="numeric"
             value={price}
-            onChangeText={(val) => setPrice(val)}
+            onChangeText={handleChange('price')}
           />
           <DatePicker
             title="Purchasing date:"
-            value={date}
-            onChange={handleChangeDate}
+            value={purchasingDate}
+            onChange={(purchasingDate) =>
+              setNewProductInfo({ ...newProductInfo, purchasingDate })
+            }
           />
           <Pressable
             style={styles.categories}
             onPress={() => setShowCategoryModal(true)}
           >
-            <Text style={styles.categoryTitle}>
-              {category !== '' ? category : 'Categories'}
-            </Text>
+            <Text style={styles.categoryTitle}>{category || 'Categories'}</Text>
             <Icon name="caret-down-outline" size={24} color={colors.PRIMARY} />
           </Pressable>
           <OptionModal
             visible={showCategoryModal}
             options={categories}
-            onPress={(item) => {
-              setCategory(item?.value);
-              setShowCategoryModal(false);
-            }}
+            onPress={(item) =>
+              setNewProductInfo({ ...newProductInfo, category: item.value })
+            }
             renderItem={(item) => (
               <CategoryOption icon={item.icon} label={item.label} />
             )}
@@ -95,7 +98,7 @@ const NewProductScreen: FC<Props> = (props) => {
             numberOfLines={4}
             style={styles.description}
             value={description}
-            onChangeText={(txt) => setDescription(txt)}
+            onChangeText={handleChange('description')}
           />
           <AppButton
             btnTitle="Create Product"
