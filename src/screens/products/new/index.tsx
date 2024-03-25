@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import * as ImagePicker from 'expo-image-picker';
 
 import AuthInput from '@ui/auth/input';
 import { colors } from '@utils/colors';
@@ -17,6 +18,8 @@ import OptionModal from '@components/modals/option-modal';
 import { categories } from '@utils/categories';
 import CategoryOption from '@ui/options/category';
 import AppButton from '@ui/app-button';
+import Toast from 'react-native-toast-message';
+import ImagesRenderAndSelection from '@components/products/new/images-render-selection';
 
 interface Props {}
 
@@ -32,11 +35,29 @@ const NewProductScreen: FC<Props> = (props) => {
   const [newProductInfo, setNewProductInfo] = useState({
     ...defaultNewProductInfo,
   });
-  const { category, description, name, price, purchasingDate } = newProductInfo;
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
+
+  const { category, description, name, price, purchasingDate } = newProductInfo;
 
   const handleChange = (name: string) => (text: string) =>
     setNewProductInfo({ ...newProductInfo, [name]: text });
+
+  const handleImageSelection = async () => {
+    try {
+      const { assets } = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: false,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.3, // 30% Of actual quality
+        allowsMultipleSelection: true,
+      });
+      if (!assets) return;
+      const uris = assets.map(({ uri }) => uri);
+      setImages([...images, ...uris]);
+    } catch (error) {
+      Toast.show({ type: 'error', text1: 'OOPS! something went wrong!' });
+    }
+  };
 
   const handleCreateNewProduct = async () => {
     console.log({ name, description, price, category, purchasingDate });
@@ -48,12 +69,11 @@ const NewProductScreen: FC<Props> = (props) => {
     >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
-          <Pressable style={styles.fileSelector}>
-            <View style={styles.iconContainer}>
-              <Icon name="images" size={24} color={colors.PRIMARY} />
-            </View>
-            <Text style={styles.btnTitle}>Add Images</Text>
-          </Pressable>
+          <ImagesRenderAndSelection
+            images={images}
+            setImages={setImages}
+            onPress={handleImageSelection}
+          />
           <AuthInput
             placeholder="Product Name"
             style={styles.marginBottom}
@@ -118,25 +138,6 @@ const styles = StyleSheet.create({
   },
   marginBottom: {
     marginBottom: 10,
-  },
-  fileSelector: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 15,
-    alignSelf: 'flex-start',
-  },
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 70,
-    width: 70,
-    borderWidth: 2,
-    borderColor: colors.PRIMARY,
-    borderRadius: 7,
-  },
-  btnTitle: {
-    color: colors.PRIMARY,
-    marginTop: 5,
   },
   categories: {
     flexDirection: 'row',

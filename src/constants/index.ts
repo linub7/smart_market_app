@@ -7,3 +7,10 @@ export const FORGOT_PASSWORD_IMAGE: string =
 export const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 export const PASSWORD_REGEX =
   /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#\$%\^&\*])[a-zA-Z\d!@#\$%\^&\*]+$/;
+
+export const IMAGE_OPTIONS = [
+  {
+    value: 'Remove image',
+    id: 'remove',
+  },
+];
