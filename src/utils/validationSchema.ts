@@ -1,6 +1,25 @@
 import * as Yup from 'yup';
 
 import { EMAIL_REGEX, PASSWORD_REGEX } from 'src/constants';
+import { categories } from './categories';
+
+type ValidationResult<T> = { error?: string; values?: T };
+
+export const yupValidate = async <T extends object>(
+  schema: Yup.Schema,
+  value: T
+): Promise<ValidationResult<T>> => {
+  try {
+    const data = await schema.validate(value);
+    return { values: data };
+  } catch (error) {
+    if (error instanceof Yup.ValidationError) {
+      return { error: error?.message };
+    } else {
+      return { error: (error as any)?.message };
+    }
+  }
+};
 
 Yup.addMethod(Yup.string, 'email', function validateEmail(message) {
   return this.matches(EMAIL_REGEX, {
@@ -43,4 +62,17 @@ export const forgotPasswordValidationSchema = Yup.object({
     .trim('Email is required!')
     .email('Invalid Email')
     .required('Email is required!'),
+});
+
+export const newProductValidationSchema = Yup.object({
+  name: Yup.string().required('Name is required!'),
+  description: Yup.string().required('description is required!'),
+  category: Yup.string()
+    .oneOf(
+      categories.map((el) => el.value),
+      'Invalid category'
+    )
+    .required('Category is required!'),
+  price: Yup.number().positive().required('price is required!'),
+  purchasingDate: Yup.date().required('Purchasing date is required'),
 });

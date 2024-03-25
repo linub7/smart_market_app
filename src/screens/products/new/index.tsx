@@ -20,13 +20,17 @@ import CategoryOption from '@ui/options/category';
 import AppButton from '@ui/app-button';
 import Toast from 'react-native-toast-message';
 import ImagesRenderAndSelection from '@components/products/new/images-render-selection';
+import {
+  newProductValidationSchema,
+  yupValidate,
+} from '@utils/validationSchema';
 
 interface Props {}
 
 const defaultNewProductInfo = {
   name: '',
   description: '',
-  price: '',
+  price: 0,
   category: '',
   purchasingDate: new Date(),
 };
@@ -40,8 +44,11 @@ const NewProductScreen: FC<Props> = (props) => {
 
   const { category, description, name, price, purchasingDate } = newProductInfo;
 
-  const handleChange = (name: string) => (text: string) =>
-    setNewProductInfo({ ...newProductInfo, [name]: text });
+  const handleChange = (name: string) => (text: string) => {
+    name === 'price'
+      ? setNewProductInfo({ ...newProductInfo, [name]: +text })
+      : setNewProductInfo({ ...newProductInfo, [name]: text });
+  };
 
   const handleImageSelection = async () => {
     try {
@@ -60,7 +67,14 @@ const NewProductScreen: FC<Props> = (props) => {
   };
 
   const handleCreateNewProduct = async () => {
-    console.log({ name, description, price, category, purchasingDate });
+    // console.log({ name, description, price, category, purchasingDate });
+    const { error } = await yupValidate(
+      newProductValidationSchema,
+      newProductInfo
+    );
+    if (error) return Toast.show({ type: 'error', text1: error });
+
+    console.log(newProductInfo);
   };
 
   return (
@@ -84,7 +98,7 @@ const NewProductScreen: FC<Props> = (props) => {
             placeholder="Price"
             style={styles.marginBottom}
             keyboardType="numeric"
-            value={price}
+            value={price.toString()}
             onChangeText={handleChange('price')}
           />
           <DatePicker
