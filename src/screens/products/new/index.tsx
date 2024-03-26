@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
+import Toast from 'react-native-toast-message';
+import mime from 'mime';
 
 import AuthInput from '@ui/auth/input';
 import { colors } from '@utils/colors';
@@ -18,12 +20,13 @@ import OptionModal from '@components/modals/option-modal';
 import { categories } from '@utils/categories';
 import CategoryOption from '@ui/options/category';
 import AppButton from '@ui/app-button';
-import Toast from 'react-native-toast-message';
 import ImagesRenderAndSelection from '@components/products/new/images-render-selection';
 import {
   newProductValidationSchema,
   yupValidate,
 } from '@utils/validationSchema';
+import { getNewTokens } from '@utils/helpers';
+import { createProductHandler } from '@api/products';
 
 interface Props {}
 
@@ -41,6 +44,7 @@ const NewProductScreen: FC<Props> = (props) => {
   });
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [images, setImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const { category, description, name, price, purchasingDate } = newProductInfo;
 
@@ -67,14 +71,48 @@ const NewProductScreen: FC<Props> = (props) => {
   };
 
   const handleCreateNewProduct = async () => {
-    // console.log({ name, description, price, category, purchasingDate });
     const { error } = await yupValidate(
       newProductValidationSchema,
       newProductInfo
     );
     if (error) return Toast.show({ type: 'error', text1: error });
+    if (!images?.length)
+      return Toast.show({
+        type: 'error',
+        text1: 'You have to insert at least one image!',
+      });
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('price', price.toString());
+    formData.append('description', description);
+    formData.append('date', purchasingDate.toString());
+    formData.append('category', category);
+    // appending images
+    const newImages = images.map((img, index) => ({
+      name: `image_${index}`,
+      type: mime.getType(img),
+      uri: img,
+    }));
+    for (const img of newImages) {
+      formData.append('images', img as any);
+    }
 
-    console.log(newProductInfo);
+    const tokens = await getNewTokens();
+    setLoading(true);
+    const { err, data } = await createProductHandler(
+      formData,
+      tokens?.newAccessToken!
+    );
+    if (err) {
+      console.log(err);
+      Toast.show({ type: 'error', text1: err });
+      setLoading(false);
+      return;
+    }
+    setLoading(false);
+    Toast.show({ type: 'success', text1: data?.data?.message });
+    setNewProductInfo({ ...defaultNewProductInfo });
+    setImages([]);
   };
 
   return (
@@ -137,7 +175,7 @@ const NewProductScreen: FC<Props> = (props) => {
           <AppButton
             btnTitle="Create Product"
             borderRadius={7}
-            loading={false}
+            loading={loading}
             onPress={handleCreateNewProduct}
           />
         </View>
