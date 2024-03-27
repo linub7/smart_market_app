@@ -27,6 +27,7 @@ import {
 } from '@utils/validationSchema';
 import { getNewTokens } from '@utils/helpers';
 import { createProductHandler } from '@api/products';
+import { sizes } from '@utils/size';
 
 interface Props {}
 
@@ -186,7 +187,7 @@ const NewProductScreen: FC<Props> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
+    padding: sizes.SCREEN_PADDING,
   },
   marginBottom: {
     marginBottom: 10,

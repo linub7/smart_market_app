@@ -37,9 +37,11 @@ const AppNavigator: FC<Props> = (props) => {
 
   const fetchAuthInfo = async () => {
     dispatch(updateLoadingStateAction({ loadingState: true }));
+
     const tokens = await getNewTokens();
     if (!tokens?.newAccessToken)
       return dispatch(updateLoadingStateAction({ loadingState: false }));
+
     const { err, data } = await getMeHandler(tokens.newAccessToken);
     if (err) {
       dispatch(updateLoadingStateAction({ loadingState: false }));

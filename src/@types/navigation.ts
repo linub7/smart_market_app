@@ -7,3 +7,9 @@ export type AuthStackParamList = {
 export type AuthenticatedNavigatorStackParamList = {
   home: undefined;
 };
+
+export type ProfileNavigatorStackParamList = {
+  profile: undefined;
+  'profile-chats': undefined;
+  'profile-products': undefined;
+};

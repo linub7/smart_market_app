@@ -5,8 +5,8 @@ import { colors } from '@utils/colors';
 
 interface Props {
   title: string;
-  onPress?(): void;
   active?: boolean;
+  onPress?(): void;
 }
 
 const AppLink: FC<Props> = ({ title, onPress, active = true }) => {

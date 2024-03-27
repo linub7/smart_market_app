@@ -15,6 +15,8 @@ export const getNewTokens = async () => {
   const accessToken = await getFromAsyncStorage(Keys.AUTH_ACCESS_TOKEN);
   const refreshToken = await getFromAsyncStorage(Keys.AUTH_REFRESH_TOKEN);
 
+  if (!accessToken || !refreshToken) return;
+
   newAccessToken = accessToken!;
   newRefreshToken = refreshToken!;
 
