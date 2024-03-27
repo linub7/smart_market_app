@@ -1,7 +1,7 @@
 import { useFormikContext } from 'formik';
 import { FC } from 'react';
 
-import AppButton from '@ui/app-button';
+import AppButton from '@ui/buttons/app';
 
 interface Props {
   btnTitle: string;

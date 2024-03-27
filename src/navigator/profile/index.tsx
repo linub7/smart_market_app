@@ -6,6 +6,7 @@ import ProfileScreen from '@screens/profile';
 import ProfileChatsScreen from '@screens/profile/chats';
 import ProfileProductsScreen from '@screens/profile/products';
 import { ProfileNavigatorStackParamList } from 'src/@types/navigation';
+import SingleProductScreen from '@screens/profile/products/[id]';
 
 interface Props {}
 
@@ -17,6 +18,7 @@ const ProfileNavigator: FC<Props> = (props) => {
       <Stack.Screen name="profile" component={ProfileScreen} />
       <Stack.Screen name="profile-chats" component={ProfileChatsScreen} />
       <Stack.Screen name="profile-products" component={ProfileProductsScreen} />
+      <Stack.Screen name="single-product" component={SingleProductScreen} />
     </Stack.Navigator>
   );
 };

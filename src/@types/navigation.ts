@@ -12,4 +12,7 @@ export type ProfileNavigatorStackParamList = {
   profile: undefined;
   'profile-chats': undefined;
   'profile-products': undefined;
+  'single-product': {
+    id: string;
+  };
 };

@@ -18,3 +18,35 @@ export const createProductHandler = async (
     return { err: errorMessage };
   }
 };
+
+export const getAllMyProductsHandler = async (
+  page: string,
+  limit: string,
+  token: string
+) => {
+  try {
+    const { data } = await client.get(`/products?page=${page}&limit=${limit}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return { data };
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return { err: errorMessage };
+  }
+};
+
+export const getSingleProductHandler = async (id: string, token: string) => {
+  try {
+    const { data } = await client.get(`/products/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return { data };
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return { err: errorMessage };
+  }
+};

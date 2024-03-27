@@ -19,7 +19,7 @@ import DatePicker from '@ui/date-picker';
 import OptionModal from '@components/modals/option-modal';
 import { categories } from '@utils/categories';
 import CategoryOption from '@ui/options/category';
-import AppButton from '@ui/app-button';
+import AppButton from '@ui/buttons/app';
 import ImagesRenderAndSelection from '@components/products/new/images-render-selection';
 import {
   newProductValidationSchema,
