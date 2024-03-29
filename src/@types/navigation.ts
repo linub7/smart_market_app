@@ -15,4 +15,10 @@ export type ProfileNavigatorStackParamList = {
   'single-product': {
     id: string;
   };
+  'edit-product': {
+    id: string;
+  };
+  chat: {
+    userId: string;
+  };
 };

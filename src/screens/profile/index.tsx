@@ -7,6 +7,7 @@ import Toast from 'react-native-toast-message';
 import {
   getAuthState,
   loggedOutAction,
+  updateLoadingStateAction,
   updateLoggedInStateAction,
 } from '@store/auth';
 import { colors } from '@utils/colors';
@@ -29,6 +30,8 @@ const ProfileScreen: FC<Props> = (props) => {
 
   const handleSignout = async () => {
     const tokens = await getNewTokens();
+    if (!tokens?.newAccessToken)
+      return dispatch(updateLoadingStateAction({ loadingState: false }));
     const { err, data } = await signoutHandler(
       tokens?.newAccessToken!,
       tokens?.newRefreshToken!

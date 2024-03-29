@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-toast-message';
 import mime from 'mime';
+import { useDispatch } from 'react-redux';
 
 import AuthInput from '@ui/auth/input';
 import { colors } from '@utils/colors';
@@ -28,6 +29,8 @@ import {
 import { getNewTokens } from '@utils/helpers';
 import { createProductHandler } from '@api/products';
 import { sizes } from '@utils/size';
+import { updateLoadingStateAction } from '@store/auth';
+import { addToProductsAction } from '@store/products';
 
 interface Props {}
 
@@ -48,6 +51,8 @@ const NewProductScreen: FC<Props> = (props) => {
   const [loading, setLoading] = useState(false);
 
   const { category, description, name, price, purchasingDate } = newProductInfo;
+
+  const dispatch = useDispatch();
 
   const handleChange = (name: string) => (text: string) => {
     name === 'price'
@@ -99,6 +104,8 @@ const NewProductScreen: FC<Props> = (props) => {
     }
 
     const tokens = await getNewTokens();
+    if (!tokens?.newAccessToken)
+      return dispatch(updateLoadingStateAction({ loadingState: false }));
     setLoading(true);
     const { err, data } = await createProductHandler(
       formData,
@@ -111,6 +118,7 @@ const NewProductScreen: FC<Props> = (props) => {
       return;
     }
     setLoading(false);
+    dispatch(addToProductsAction({ product: data?.data?.product }));
     Toast.show({ type: 'success', text1: data?.data?.message });
     setNewProductInfo({ ...defaultNewProductInfo });
     setImages([]);

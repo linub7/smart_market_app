@@ -50,3 +50,17 @@ export const getSingleProductHandler = async (id: string, token: string) => {
     return { err: errorMessage };
   }
 };
+
+export const deleteProductHandler = async (id: string, token: string) => {
+  try {
+    const { data } = await client.delete(`/products/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return { data };
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return { err: errorMessage };
+  }
+};

@@ -1,21 +1,26 @@
 import { FC, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 
 import CustomHeader from '@components/shared/header';
 import { sizes } from '@utils/size';
 import { getAllMyProductsHandler } from '@api/products';
 import { getNewTokens } from '@utils/helpers';
-import { IProduct } from 'src/@types/product';
 import ProductItem from '@ui/products/item';
 import { ProfileNavigatorStackParamList } from 'src/@types/navigation';
+import { updateLoadingStateAction } from '@store/auth';
+import { getProductsState, setProductsAction } from '@store/products';
 
 interface Props {}
 
 const ProfileProductsScreen: FC<Props> = (props) => {
-  const [myProducts, setMyProducts] = useState<IProduct[]>([]);
+  const [isFetching, setIsFetching] = useState(false);
+
   const navigation =
     useNavigation<NavigationProp<ProfileNavigatorStackParamList>>();
+  const dispatch = useDispatch();
+  const { products } = useSelector(getProductsState);
 
   useEffect(() => {
     handleGetAllMyProducts();
@@ -28,6 +33,9 @@ const ProfileProductsScreen: FC<Props> = (props) => {
 
   const handleGetAllMyProducts = async () => {
     const tokens = await getNewTokens();
+    if (!tokens?.newAccessToken)
+      return dispatch(updateLoadingStateAction({ loadingState: false }));
+    setIsFetching(true);
     // TODO: page & Limit
     const { err, data } = await getAllMyProductsHandler(
       '1',
@@ -36,9 +44,11 @@ const ProfileProductsScreen: FC<Props> = (props) => {
     );
     if (err) {
       console.log(err);
+      setIsFetching(false);
       return;
     }
-    setMyProducts(data?.data?.products);
+    setIsFetching(false);
+    dispatch(setProductsAction({ products: data?.data?.products }));
   };
   return (
     <View style={styles.container}>
@@ -47,11 +57,13 @@ const ProfileProductsScreen: FC<Props> = (props) => {
         <FlatList
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.flatList}
-          data={myProducts}
+          data={products}
           keyExtractor={(el) => el.id}
           renderItem={({ item }) => (
             <ProductItem item={item} onPress={() => handleNavigate(item.id)} />
           )}
+          refreshing={isFetching}
+          onRefresh={handleGetAllMyProducts}
         />
       </View>
     </View>

@@ -14,11 +14,15 @@ export interface IProduct {
   thumbnail: string;
   category: string;
   price: number;
-  date: Date;
+  date: string;
   images: string[];
   seller: {
     id: string;
     name: string;
     avatar?: string;
   };
+}
+
+export interface ProductState {
+  products: IProduct[];
 }
