@@ -112,7 +112,7 @@ const NewProductScreen: FC<Props> = (props) => {
       tokens?.newAccessToken!
     );
     if (err) {
-      console.log(err);
+      console.log({ createNewProductError: err });
       Toast.show({ type: 'error', text1: err });
       setLoading(false);
       return;

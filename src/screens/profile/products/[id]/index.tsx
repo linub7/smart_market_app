@@ -68,7 +68,7 @@ const SingleProductScreen: FC<Props> = (props) => {
       tokens?.newAccessToken!
     );
     if (err) {
-      console.log({ err });
+      console.log({ getSingleProductError: err });
       goBack();
       return;
     }
@@ -84,7 +84,7 @@ const SingleProductScreen: FC<Props> = (props) => {
       tokens?.newAccessToken!
     );
     if (err) {
-      console.log(err);
+      console.log({ deleteProductError: err });
       Toast.show({ type: 'error', text1: err });
       return;
     }
@@ -136,7 +136,7 @@ const SingleProductScreen: FC<Props> = (props) => {
           {product && <ProductDetail product={product} />}
         </View>
       </View>
-      {!isProductBelongToMe && (
+      {product && !isProductBelongToMe && (
         <Pressable onPress={handleNavigate} style={styles.chatIconStyle}>
           <Icon name="chatbubbles-outline" size={32} color={colors.WHITE} />
         </Pressable>

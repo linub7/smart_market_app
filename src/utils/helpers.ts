@@ -20,15 +20,18 @@ export const getNewTokens = async () => {
   newAccessToken = accessToken!;
   newRefreshToken = refreshToken!;
 
+  console.log({ newAccessToken, newRefreshToken });
+
   if (shouldRefreshToken(accessToken!)) {
     console.log('expire');
     const { err, data } = await grantAccessTokenHandler(refreshToken!);
     if (err) {
-      console.log(err);
+      console.log({ grantAccessTokenError: err });
       return;
     }
     newAccessToken = data?.data?.tokens?.accessToken;
     newRefreshToken = data?.data?.tokens?.refreshToken;
+    console.log({ newAccessToken, newRefreshToken });
     await saveToAsyncStorage(Keys.AUTH_ACCESS_TOKEN, newAccessToken);
     await saveToAsyncStorage(Keys.AUTH_REFRESH_TOKEN, newRefreshToken);
   }

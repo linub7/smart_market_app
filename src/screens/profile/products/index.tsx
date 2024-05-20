@@ -43,7 +43,7 @@ const ProfileProductsScreen: FC<Props> = (props) => {
       tokens?.newAccessToken!
     );
     if (err) {
-      console.log(err);
+      console.log({ getAllMyProductsError: err });
       setIsFetching(false);
       return;
     }

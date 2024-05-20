@@ -14,3 +14,14 @@ export const IMAGE_OPTIONS = [
     id: 'remove',
   },
 ];
+
+export const EDIT_SCREEN_IMAGE_OPTIONS = [
+  {
+    value: 'Use as Thumbnail',
+    id: 'thumb',
+  },
+  {
+    value: 'Remove image',
+    id: 'remove',
+  },
+];

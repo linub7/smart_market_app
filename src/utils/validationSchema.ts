@@ -76,3 +76,16 @@ export const newProductValidationSchema = Yup.object({
   price: Yup.number().positive().required('price is required!'),
   purchasingDate: Yup.date().required('Purchasing date is required'),
 });
+
+export const updateProductValidationSchema = Yup.object({
+  name: Yup.string().required('Name is required!'),
+  description: Yup.string().required('description is required!'),
+  category: Yup.string()
+    .oneOf(
+      categories.map((el) => el.value),
+      'Invalid category'
+    )
+    .required('Category is required!'),
+  price: Yup.number().positive().required('price is required!'),
+  date: Yup.date().required('Purchasing date is required'),
+});

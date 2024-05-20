@@ -37,7 +37,7 @@ const ProfileScreen: FC<Props> = (props) => {
       tokens?.newRefreshToken!
     );
     if (err) {
-      console.log({ err });
+      console.log({ signoutError: err });
       Toast.show({
         type: 'error',
         text1: 'OOPS! Something went wrong! please try again later.',
