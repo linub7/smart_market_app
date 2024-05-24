@@ -37,6 +37,16 @@ export const getAllMyProductsHandler = async (
   }
 };
 
+export const getLatestProductsHandler = async () => {
+  try {
+    const { data } = await client.get(`/products/latest`);
+    return { data };
+  } catch (error) {
+    const errorMessage = catchAsyncError(error);
+    return { err: errorMessage };
+  }
+};
+
 export const getProductsByCategoryHandler = async (
   page: string,
   limit: string,

@@ -23,6 +23,14 @@ export interface IProduct {
   };
 }
 
+export interface ILatestProduct {
+  id: string;
+  name: string;
+  thumbnail?: string;
+  category: string;
+  price: number;
+}
+
 export interface ProductState {
   products: IProduct[];
 }

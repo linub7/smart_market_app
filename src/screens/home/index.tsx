@@ -1,44 +1,43 @@
 import 'core-js/stable/atob';
 import { FC } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
-import { testHandler } from '@api/auth';
-import { getNewTokens } from '@utils/helpers';
-import { updateLoadingStateAction } from '@store/auth';
+import { sizes } from '@utils/size';
+import ChatNotificationLink from '@ui/links/chat-notifications';
+import { AuthenticatedNavigatorStackParamList } from 'src/@types/navigation';
+import HomeSearchBarComponent from '@components/home/search-bar';
+import HomeCategoryList from '@components/home/category-list';
+import HomeLatestProducts from '@components/home/latest-products';
 
 interface Props {}
 
 const HomeScreen: FC<Props> = (props) => {
-  const dispatch = useDispatch();
-  const handleTest = async () => {
-    const tokens = await getNewTokens();
-    if (!tokens?.newAccessToken)
-      return dispatch(updateLoadingStateAction({ loadingState: false }));
-    const newAccessToken = tokens?.newAccessToken;
-    const newRefreshToken = tokens?.newRefreshToken;
+  const navigation =
+    useNavigation<NavigationProp<AuthenticatedNavigatorStackParamList>>();
 
-    const { err, data } = await testHandler(newAccessToken!);
-    if (err) {
-      console.log({ err });
-      return;
-    }
-    console.log(data);
-  };
-  const handleSignout = async () => {
-    console.log('signout');
-  };
+  const handleNavigateToChats = () => navigation.navigate('chats');
+
+  const handleSelectCategory = (category: string) =>
+    navigation.navigate('products');
+
   return (
-    <View style={styles.container}>
-      <Text>HOme</Text>
-      <Button title="test" onPress={handleTest} />
-      <Button title="signout" onPress={handleSignout} />
-    </View>
+    <>
+      <ChatNotificationLink onPress={handleNavigateToChats} />
+      <ScrollView style={styles.container}>
+        <HomeSearchBarComponent />
+        <HomeCategoryList onPress={handleSelectCategory} />
+        <HomeLatestProducts />
+      </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    padding: sizes.SCREEN_PADDING,
+    flex: 1,
+  },
 });
 
 export default HomeScreen;

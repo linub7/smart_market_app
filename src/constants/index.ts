@@ -25,3 +25,7 @@ export const EDIT_SCREEN_IMAGE_OPTIONS = [
     id: 'remove',
   },
 ];
+
+export const HOME_CATEGORY_ICON_SIZE = 80;
+
+export const LATEST_PRODUCTS_COLUMN_COUNT = 2;

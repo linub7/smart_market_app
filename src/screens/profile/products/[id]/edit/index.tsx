@@ -33,11 +33,10 @@ import {
 } from '@utils/validationSchema';
 import { updateProductAction } from '@store/products';
 import { EDIT_SCREEN_IMAGE_OPTIONS } from 'src/constants';
-import ImagesRenderAndSelection from '@components/products/new/images-render-selection';
 
 type Props = NativeStackScreenProps<
   ProfileNavigatorStackParamList,
-  'single-product'
+  'edit-product'
 >;
 
 const defaultProductInfo = {
