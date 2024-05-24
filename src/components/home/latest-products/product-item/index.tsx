@@ -1,9 +1,11 @@
 import { FC } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 import { ILatestProduct } from 'src/@types/product';
 import { priceFormatter } from '@utils/helpers';
 import { colors } from '@utils/colors';
+import { AuthenticatedNavigatorStackParamList } from 'src/@types/navigation';
 
 interface Props {
   item: ILatestProduct;
@@ -11,7 +13,11 @@ interface Props {
 
 const HomeLatestProductItem: FC<Props> = (props) => {
   const { item } = props;
-  const handlePress = () => {};
+  const navigation =
+    useNavigation<NavigationProp<AuthenticatedNavigatorStackParamList>>();
+
+  const handlePress = () =>
+    navigation.navigate('product-detail', { id: item.id });
   return (
     <Pressable style={styles.container} onPress={handlePress}>
       <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />

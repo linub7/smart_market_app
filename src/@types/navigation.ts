@@ -8,6 +8,9 @@ export type AuthenticatedNavigatorStackParamList = {
   home: undefined;
   chats: undefined;
   products: undefined;
+  'product-detail': {
+    id: string;
+  };
 };
 
 export type ProfileNavigatorStackParamList = {
