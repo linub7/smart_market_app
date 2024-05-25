@@ -6,7 +6,7 @@ import HomeScreen from '@screens/home';
 import { AuthenticatedNavigatorStackParamList } from 'src/@types/navigation';
 import ProfileChatsScreen from '@screens/profile/chats';
 import ProductsScreen from '@screens/products';
-import SingleProductScreen from '@screens/products/[productId]';
+import SingleProductDetailScreen from '@screens/products/[productId]';
 
 interface Props {}
 
@@ -19,7 +19,10 @@ const AuthenticatedNavigator: FC<Props> = (props) => {
       <Stack.Screen name="home" component={HomeScreen} />
       <Stack.Screen name="chats" component={ProfileChatsScreen} />
       <Stack.Screen name="products" component={ProductsScreen} />
-      <Stack.Screen name="product-detail" component={SingleProductScreen} />
+      <Stack.Screen
+        name="product-detail"
+        component={SingleProductDetailScreen}
+      />
     </Stack.Navigator>
   );
 };
