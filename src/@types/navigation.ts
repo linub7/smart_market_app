@@ -7,7 +7,9 @@ export type AuthStackParamList = {
 export type AuthenticatedNavigatorStackParamList = {
   home: undefined;
   chats: undefined;
-  products: undefined;
+  products: {
+    category: string;
+  };
   'product-detail': {
     id: string;
   };

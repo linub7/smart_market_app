@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 import { getLatestProductsHandler } from '@api/products';
 import { ILatestProduct } from 'src/@types/product';
@@ -12,6 +12,8 @@ interface Props {}
 
 const HomeLatestProducts: FC<Props> = (props) => {
   const [latestProducts, setLatestProducts] = useState<ILatestProduct[]>([]);
+
+  const isOdd = latestProducts?.length % LATEST_PRODUCTS_COLUMN_COUNT !== 0;
 
   useEffect(() => {
     handleGetLatestProducts();
@@ -31,11 +33,29 @@ const HomeLatestProducts: FC<Props> = (props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Recently Listed Offers</Text>
-      <GridView
+      <FlatList
+        data={latestProducts}
+        numColumns={LATEST_PRODUCTS_COLUMN_COUNT}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item, index }) => (
+          <View
+            style={{
+              flex:
+                isOdd && index === latestProducts?.length - 1
+                  ? 1 / LATEST_PRODUCTS_COLUMN_COUNT
+                  : 1,
+            }}
+          >
+            <HomeLatestProductItem item={item} />
+          </View>
+        )}
+      />
+      {/* <GridView
         column={LATEST_PRODUCTS_COLUMN_COUNT}
         items={latestProducts}
         renderItem={(item) => <HomeLatestProductItem item={item} />}
-      />
+      /> */}
     </View>
   );
 };

@@ -43,3 +43,12 @@ export const priceFormatter = (price: number) =>
     style: 'currency',
     currency: 'USD',
   }).format(price);
+
+/**
+   * const str = 'home-and-kitchen';
+const newStr = str.replace(/-([a-z])/g, (match, p1) => ` ${p1.toUpperCase()}`);
+console.log(newStr);
+   */
+
+export const categoryFormatter = (category: string) =>
+  category?.replace(/-([a-z])/g, (match, p1) => ` ${p1.toUpperCase()}`);

@@ -19,16 +19,16 @@ const HomeScreen: FC<Props> = (props) => {
   const handleNavigateToChats = () => navigation.navigate('chats');
 
   const handleSelectCategory = (category: string) =>
-    navigation.navigate('products');
+    navigation.navigate('products', { category });
 
   return (
     <>
       <ChatNotificationLink onPress={handleNavigateToChats} />
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <HomeSearchBarComponent />
         <HomeCategoryList onPress={handleSelectCategory} />
         <HomeLatestProducts />
-      </ScrollView>
+      </View>
     </>
   );
 };

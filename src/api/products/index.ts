@@ -50,17 +50,11 @@ export const getLatestProductsHandler = async () => {
 export const getProductsByCategoryHandler = async (
   page: string,
   limit: string,
-  category: string,
-  token: string
+  category: string
 ) => {
   try {
     const { data } = await client.get(
-      `/categories/${category}?page=${page}&limit=${limit}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      `/products/categories/${category}?page=${page}&limit=${limit}`
     );
     return { data };
   } catch (error) {
