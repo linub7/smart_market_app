@@ -1,6 +1,6 @@
 import { FC, useEffect, useState, JSX } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -18,6 +18,8 @@ import OptionButton from '@ui/buttons/option';
 import OptionModal from '@components/modals/option-modal';
 import { colors } from '@utils/colors';
 import { deleteProductAction } from '@store/products';
+import ChatBubbleIcon from '@ui/icons/chat-bubble';
+import { getOrCreateConversationHandler } from '@api/conversation';
 
 type Props = NativeStackScreenProps<
   ProfileNavigatorStackParamList,
@@ -56,8 +58,19 @@ const SingleProductScreen: FC<Props> = (props) => {
     return () => {};
   }, [id]);
 
-  const handleNavigate = () =>
+  const handleNavigate = async () => {
+    const tokens = await getNewTokens();
+    if (!tokens?.newAccessToken) return;
+    const { err, data } = await getOrCreateConversationHandler(
+      product?.seller?.id!,
+      tokens.newAccessToken
+    );
+    if (err) {
+      console.log({ getOrCreateConversationError: err });
+      return;
+    }
     navigate('chat', { userId: product?.seller?.id! });
+  };
 
   const handleGetSingleProduct = async () => {
     const tokens = await getNewTokens();
@@ -137,9 +150,7 @@ const SingleProductScreen: FC<Props> = (props) => {
         </View>
       </View>
       {product && !isProductBelongToMe && (
-        <Pressable onPress={handleNavigate} style={styles.chatIconStyle}>
-          <Icon name="chatbubbles-outline" size={32} color={colors.WHITE} />
-        </Pressable>
+        <ChatBubbleIcon onPress={handleNavigate} />
       )}
       <OptionModal
         visible={isShowMenu}
@@ -177,17 +188,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     gap: 10,
-  },
-  chatIconStyle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: colors.ACTIVE,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 15,
-    right: 15,
   },
 });
 
