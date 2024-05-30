@@ -1,15 +1,17 @@
-import { colors } from '@utils/colors';
 import { FC } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+
+import { colors } from '@utils/colors';
 
 interface Props {
   title: string;
+  additionalStyle?: StyleProp<ViewStyle>;
 }
 
 const EmptyView: FC<Props> = (props) => {
-  const { title } = props;
+  const { title, additionalStyle } = props;
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, additionalStyle]}>
       <Text style={styles.title}>{title}</Text>
     </View>
   );
@@ -24,7 +26,7 @@ const styles = StyleSheet.create({
   title: {
     color: colors.PRIMARY,
     opacity: 0.6,
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: '600',
   },
 });
