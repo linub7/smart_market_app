@@ -7,6 +7,7 @@ import { AuthenticatedNavigatorStackParamList } from 'src/@types/navigation';
 import ProfileChatsScreen from '@screens/profile/chats';
 import ProductsScreen from '@screens/products';
 import SingleProductDetailScreen from '@screens/products/[productId]';
+import ChatScreen from '@screens/chats/[conversationId]';
 
 interface Props {}
 
@@ -23,6 +24,7 @@ const AuthenticatedNavigator: FC<Props> = (props) => {
         name="product-detail"
         component={SingleProductDetailScreen}
       />
+      <Stack.Screen name="chat" component={ChatScreen} />
     </Stack.Navigator>
   );
 };

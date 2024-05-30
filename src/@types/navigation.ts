@@ -13,6 +13,14 @@ export type AuthenticatedNavigatorStackParamList = {
   'product-detail': {
     id: string;
   };
+  chat: {
+    conversationId: string;
+    peerProfile: {
+      id: string;
+      name: string;
+      avatar?: string;
+    };
+  };
 };
 
 export type ProfileNavigatorStackParamList = {
@@ -24,8 +32,5 @@ export type ProfileNavigatorStackParamList = {
   };
   'edit-product': {
     id: string;
-  };
-  chat: {
-    userId: string;
   };
 };

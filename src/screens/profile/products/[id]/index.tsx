@@ -18,8 +18,8 @@ import OptionButton from '@ui/buttons/option';
 import OptionModal from '@components/modals/option-modal';
 import { colors } from '@utils/colors';
 import { deleteProductAction } from '@store/products';
-import ChatBubbleIcon from '@ui/icons/chat-bubble';
-import { getOrCreateConversationHandler } from '@api/conversation';
+// import ChatBubbleIcon from '@ui/icons/chat-bubble';
+// import { getOrCreateConversationHandler } from '@api/conversation';
 
 type Props = NativeStackScreenProps<
   ProfileNavigatorStackParamList,
@@ -57,20 +57,6 @@ const SingleProductScreen: FC<Props> = (props) => {
 
     return () => {};
   }, [id]);
-
-  const handleNavigate = async () => {
-    const tokens = await getNewTokens();
-    if (!tokens?.newAccessToken) return;
-    const { err, data } = await getOrCreateConversationHandler(
-      product?.seller?.id!,
-      tokens.newAccessToken
-    );
-    if (err) {
-      console.log({ getOrCreateConversationError: err });
-      return;
-    }
-    navigate('chat', { userId: product?.seller?.id! });
-  };
 
   const handleGetSingleProduct = async () => {
     const tokens = await getNewTokens();
@@ -127,6 +113,21 @@ const SingleProductScreen: FC<Props> = (props) => {
       navigate('edit-product', { id: product?.id! });
     }
   };
+
+  // const handleNavigate = async () => {
+  //   const tokens = await getNewTokens();
+  //   if (!tokens?.newAccessToken) return;
+  //   const { err, data } = await getOrCreateConversationHandler(
+  //     product?.seller?.id!,
+  //     tokens.newAccessToken
+  //   );
+  //   if (err) {
+  //     console.log({ getOrCreateConversationError: err });
+  //     return;
+  //   }
+  //   navigate('chat', { userId: product?.seller?.id! });
+  // };
+
   return (
     <>
       <View
@@ -149,9 +150,9 @@ const SingleProductScreen: FC<Props> = (props) => {
           {product && <ProductDetail product={product} />}
         </View>
       </View>
-      {product && !isProductBelongToMe && (
+      {/* {product && !isProductBelongToMe && (
         <ChatBubbleIcon onPress={handleNavigate} />
-      )}
+      )} */}
       <OptionModal
         visible={isShowMenu}
         onRequestClose={setIsShowMenu}

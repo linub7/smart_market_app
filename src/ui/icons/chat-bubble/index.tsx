@@ -3,16 +3,23 @@ import { Pressable, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { colors } from '@utils/colors';
+import ButtonLoader from '@ui/loaders/button-loader';
 
 interface Props {
   onPress(): void;
+  isLoading: boolean;
 }
 
 const ChatBubbleIcon: FC<Props> = (props) => {
-  const { onPress } = props;
+  const { onPress, isLoading } = props;
+
   return (
     <Pressable onPress={onPress} style={styles.chatIconStyle}>
-      <Icon name="chatbubbles-outline" size={32} color={colors.WHITE} />
+      {isLoading ? (
+        <ButtonLoader color={colors.WHITE} />
+      ) : (
+        <Icon name="chatbubbles-outline" size={32} color={colors.WHITE} />
+      )}
     </Pressable>
   );
 };

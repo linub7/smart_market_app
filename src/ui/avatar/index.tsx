@@ -7,10 +7,11 @@ import { colors } from '@utils/colors';
 interface Props {
   uri?: string;
   size?: number;
+  iconSize?: number;
 }
 
 const AvatarUI: FC<Props> = (props) => {
-  const { uri, size = 50 } = props;
+  const { uri, size = 50, iconSize = 64 } = props;
   return (
     <View style={styles.container}>
       {uri ? (
@@ -19,7 +20,11 @@ const AvatarUI: FC<Props> = (props) => {
           style={{ height: size, width: size, borderRadius: size / 2 }}
         />
       ) : (
-        <Icon name="person-circle-outline" size={64} color={colors.PRIMARY} />
+        <Icon
+          name="person-circle-outline"
+          size={iconSize}
+          color={colors.PRIMARY}
+        />
       )}
     </View>
   );
